@@ -5,6 +5,7 @@ export default class index extends Component {
         return (
             <div>
                 Text......
+                .......
             </div>
         )
     }
