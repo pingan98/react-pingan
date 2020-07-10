@@ -52,7 +52,7 @@
     "http-proxy-middleware": "^1.0.4",
     "less": "^3.11.1",
     "less-loader": "^5.0.0",
-    "react-app-rewired": "^2.1.5",
+    "react-app-rewired": "^2.1.6",
     "redux-devtools-extension": "^2.13.8"
   },
   "proxy": "http://47.103.203.152"

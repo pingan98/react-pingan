@@ -8,8 +8,9 @@ import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'
 
 import './index.less'
 
+import { reqGetSubject } from '@api/edu/subject.js'
 const columns = [
-  { title: '分类名称', dataIndex: 'name', key: 'name' },
+  { title: '分类名称', dataIndex: 'title', key: 'title' },
 
   {
     title: '操作',
@@ -17,7 +18,7 @@ const columns = [
     key: 'x',
     render: () => (
       <>
-        <Button type='primary' className='update-btn'><EditOutlined /></Button>,
+        <Button type='primary' className='update-btn'><EditOutlined /></Button>
         <Button type='danger'><DeleteOutlined /></Button>
       </>
     ),
@@ -58,6 +59,19 @@ const data = [
 
 
 export default class Subject extends Component {
+  state = {
+    subject: ''
+  }
+  async componentDidMount () {
+    const res = await reqGetSubject(1, 7)
+    console.log(res)
+    this.setState({
+      subject: res
+    })
+
+
+  }
+
   render () {
     return (<>
       <div className='subject'>
@@ -69,7 +83,8 @@ export default class Subject extends Component {
             expandedRowRender: record => <p style={{ margin: 0 }}>{record.description}</p>,
             rowExpandable: record => record.name !== 'Not Expandable',
           }}
-          dataSource={data}
+          dataSource={this.state.subject.items}
+          rowKey='_id'
         />,
       </div>
     </>
