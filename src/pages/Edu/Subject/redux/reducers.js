@@ -1,6 +1,7 @@
 import {
   GET_SUBJECT_LIST,
-  GET_SECSUBJECT_LIST
+  GET_SECSUBJECT_LIST,
+  UPDATE_SUBJECT
 } from "./constants";
 
 const initSubjectList = {
@@ -32,6 +33,29 @@ export default function subjectList (prevState = initSubjectList, action) {
       return {
         ...prevState
       }
+
+    case UPDATE_SUBJECT:
+      prevState.items.forEach(subject => {
+        console.log(prevState)
+        console.log(action)
+        if (subject._id === action.data.id) {
+          subject.title = action.data.title
+          return
+        }
+
+        subject.children.forEach(secSubject => {
+          if (secSubject.id === action.data.id) {
+            secSubject.title = action.data.title
+          }
+        })
+      })
+
+
+
+      return {
+        ...prevState
+      }
+
     default:
       return prevState;
   }

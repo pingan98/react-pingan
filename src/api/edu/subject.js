@@ -30,3 +30,22 @@ export function reqAddSecSubjectList (title, parentId) {
     });
 }
 
+// 修改----确定按钮
+export function reqUpdateSunjectList (title, id) {
+    return request({
+        url: `${BASE_URL}/update`,
+        method: 'PUT',
+        data: {
+            title,
+            id
+        }
+    })
+}
+// 删除-----操作
+export function reqDelSubject (id) {
+    return request({
+        url: `${BASE_URL}/remove/${id}`,
+        method: 'DELETE'
+    })
+}
+

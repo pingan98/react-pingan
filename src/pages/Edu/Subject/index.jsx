@@ -1,57 +1,58 @@
 
 import React, { Component } from "react";
 // 导入组件
-import { Button, Table, Tooltip, Input } from 'antd';
+import { Button, Table, Tooltip, Input, message, Modal } from 'antd';
 // 引入icon图标库
-import { PlusOutlined, EditOutlined, DeleteOutlined, FormOutlined } from '@ant-design/icons'
+import { PlusOutlined, EditOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 
 
 import './index.less'
 
-import { reqGetSubjectList } from '@api/edu/subject.js'
+// import { reqGetSubjectList } from '@api/edu/subject.js'
 
-import { getSubjectList, getSecSubjectList } from './redux'
+import { getSubjectList, getSecSubjectList, updateSubject } from './redux'
 
 import { connect } from "react-redux";
 
+import { reqDelSubject } from '@api/edu/subject'
 
-
-const data = [
-  {
-    key: 1,
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    description: 'My name is John Brown, I am 32 years old, living in New York No. 1 Lake Park.',
-  },
-  {
-    key: 2,
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    description: 'My name is Jim Green, I am 42 years old, living in London No. 1 Lake Park.',
-  },
-  {
-    key: 3,
-    name: 'Not Expandable',
-    age: 29,
-    address: 'Jiangsu No. 1 Lake Park',
-    description: 'This not expandable',
-  },
-  {
-    key: 4,
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-    description: 'My name is Joe Black, I am 32 years old, living in Sidney No. 1 Lake Park.',
-  },
-];
-
+// const data = [
+//   {
+//     key: 1,
+//     name: 'John Brown',
+//     age: 32,
+//     address: 'New York No. 1 Lake Park',
+//     description: 'My name is John Brown, I am 32 years old, living in New York No. 1 Lake Park.',
+//   },
+//   {
+//     key: 2,
+//     name: 'Jim Green',
+//     age: 42,
+//     address: 'London No. 1 Lake Park',
+//     description: 'My name is Jim Green, I am 42 years old, living in London No. 1 Lake Park.',
+//   },
+//   {
+//     key: 3,
+//     name: 'Not Expandable',
+//     age: 29,
+//     address: 'Jiangsu No. 1 Lake Park',
+//     description: 'This not expandable',
+//   },
+//   {
+//     key: 4,
+//     name: 'Joe Black',
+//     age: 32,
+//     address: 'Sidney No. 1 Lake Park',
+//     description: 'My name is Joe Black, I am 32 years old, living in Sidney No. 1 Lake Park.',
+//   },
+// ];
+const { confirm } = Modal;
 @connect(state => ({ subjectList: state.subjectList }),
-  { getSubjectList, getSecSubjectList }
+  { getSubjectList, getSecSubjectList, updateSubject }
 )
 class Subject extends Component {
-  currentPage = 2
+  currentPage = 1
+  pageSize = 10
   // state = {
   //   subject: ''
   // }
@@ -94,8 +95,8 @@ class Subject extends Component {
   handleSizeChange = (current, size) => {
     // this.getSubjectList(current, size)
     this.props.getSubjectList(current, size)
-
     this.currentPage = current
+    this.pageSize = size
   }
   // 添加
   handleAddSubject = () => {
@@ -115,13 +116,73 @@ class Subject extends Component {
         subjectId: value._id,
         subjectTitle: value.title
       })
+
+      this.oldsubjectTitle = value.title
     }
   }
 
   handleTitleChange = (e) => {
     this.setState({
-      subjectTitle: e.target.value
+      subjectTitle: e.target.value.trim()
     })
+  }
+  // 取消
+  handleCancle = () => {
+    this.setState({
+      subjectId: '',
+      subjectTitle: ''
+    })
+  }
+  // 更新
+  handleUpdate = async () => {
+
+    let { subjectId, subjectTitle } = this.state
+    if (subjectTitle.length === 0) {
+      message.error('课程分类名称不能为空')
+      return
+    }
+    if (this.oldsubjectTitle === subjectTitle) {
+      message.error('课程分类名称相同！')
+      return
+    }
+    await this.props.updateSubject(subjectTitle, subjectId)
+    message.success('更改成功')
+    // 手动调用取消按钮事件处理函数
+    this.handleCancle()
+  }
+
+  // 删除
+  handleDel = value => () => {
+    confirm({
+      // title: `确认删除该数据${value.title}吗`,
+      title: <>
+        <div>确定要删除
+          <span style={{ color: 'red', fondSize: 27 }}>{value.title}</span>
+          吗？
+        </div>
+      </>,
+      icon: < ExclamationCircleOutlined />,
+
+      onOk: async () => {
+        await reqDelSubject(value._id)
+        message.success('删除成功')
+
+        const totalPage = Math.ceil(this.props.subjectList.total / this.pageSize)
+
+        console.log(this.pageSize);
+        console.log('currentPage', this.currentPage)
+        console.log('当前数据长度', this.props.subjectList.items.length)
+        console.log('totalpage', totalPage)
+        if (this.currentPage !== 1 && this.props.subjectList.items.length === 1
+          && totalPage === this.currentPage) {
+          console.log('进来了');
+          this.props.getSubjectList(--this.currentPage, this.pageSize)
+          return
+        }
+        this.props.getSubjectList(this.currentPage, this.pageSize)
+
+      }
+    });
   }
 
   render () {
@@ -160,10 +221,11 @@ class Subject extends Component {
           if (this.state.subjectId === value._id) {
             return (
               <>
-                <Button type='primary' className='update-btn'>
+                <Button type='primary' className='update-btn'
+                  onClick={this.handleUpdate}>
                   确认
                 </Button>
-                <Button type='danger'>取消</Button>
+                <Button type='danger' onClick={this.handleCancle}>取消</Button>
               </>
             )
           }
@@ -176,11 +238,11 @@ class Subject extends Component {
                   className='update-btn'
                   onClick={this.handleUpdateClick(value)}
                 >
-                  <FormOutlined />
+                  <EditOutlined />
                 </Button>
               </Tooltip>
               <Tooltip title='删除课程分类'>
-                <Button type='danger'>
+                <Button type='danger' onClick={this.handleDel(value)}>
                   <DeleteOutlined />
                 </Button>
               </Tooltip>
