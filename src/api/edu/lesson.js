@@ -8,3 +8,20 @@ export function reqGetLessonList (chapterId) {
         method: "GET",
     });
 }
+
+export function reqQiniuToken () {
+    return request({
+        url: `/uploadtoken`,
+        method: 'GET'
+    })
+}
+// 添加课时
+export function reqAddLesson ({ chapterId, title, free, video }) {
+    return request({
+        url: `${BASE_URL}/save`,
+        method: 'POST',
+        data: {
+            chapterId, title, free, video
+        }
+    })
+}

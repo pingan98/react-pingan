@@ -121,6 +121,17 @@ class Subject extends Component {
     }
   }
 
+  // 柯里化
+  // handleUpdateClick = (value) => () => {
+
+  //   console.log(value)
+  //   this.setState({
+  //     subjectId: value._id,
+  //     subjectTitle: value.title
+  //   })
+  //   this.oldsubjectTitle = value.title
+  // }
+
   handleTitleChange = (e) => {
     this.setState({
       subjectTitle: e.target.value.trim()
@@ -169,10 +180,10 @@ class Subject extends Component {
 
         const totalPage = Math.ceil(this.props.subjectList.total / this.pageSize)
 
-        console.log(this.pageSize);
-        console.log('currentPage', this.currentPage)
-        console.log('当前数据长度', this.props.subjectList.items.length)
-        console.log('totalpage', totalPage)
+        // console.log(this.pageSize);
+        // console.log('currentPage', this.currentPage)
+        // console.log('当前数据长度', this.props.subjectList.items.length)
+        // console.log('totalpage', totalPage)
         if (this.currentPage !== 1 && this.props.subjectList.items.length === 1
           && totalPage === this.currentPage) {
           console.log('进来了');
