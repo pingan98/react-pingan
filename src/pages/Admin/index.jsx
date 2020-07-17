@@ -6,13 +6,13 @@ import Search from "./Search";
 import Statistics from "./Statistics";
 
 export default class Admin extends Component {
-  render() {
+  render () {
     return (
       <div>
         <Analysis />
-        <Monitor />
+        {/* <Monitor />
         <Search />
-        <Statistics />
+        <Statistics /> */}
       </div>
     );
   }

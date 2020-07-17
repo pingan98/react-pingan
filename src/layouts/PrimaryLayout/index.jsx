@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Layout, Menu, Dropdown, Breadcrumb } from "antd";
+import { Layout, Menu, Dropdown, Breadcrumb, menu, Button } from "antd";
 import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
@@ -21,6 +21,8 @@ import { findPathIndex } from "@utils/tools";
 // 引入组件公共样式
 import "@assets/css/common.less";
 import "./index.less";
+// 导入pubsub
+import PubSub from 'pubsub-js'
 
 const { Header, Sider, Content } = Layout;
 
@@ -37,6 +39,7 @@ const { Header, Sider, Content } = Layout;
 class PrimaryLayout extends Component {
   state = {
     collapsed: false,
+    currentLanguage: window.navigator.language === 'zh-CN' ? 'zh' : 'en'
   };
 
   toggle = () => {
@@ -75,7 +78,28 @@ class PrimaryLayout extends Component {
       </Menu.Item>
     </Menu>
   );
+  // 点击
+  handleChangeLanguage = (language) => () => {
+    // 将选中的语言传到app组件里面
+    PubSub.publish('LANGUAGE', language)
+  }
+  intlMenu = (
+    <Menu>
+      <Menu.Item>
+        <Button
+          type={this.state.currentLanguage === 'zh' ? 'link' : 'text'}
+          onClick={this.handleChangeLanguage('zh')}
+        >中文</Button>
+      </Menu.Item>
 
+      <Menu.Item>
+        <Button
+          type={this.state.currentLanguage === 'en' ? 'link' : 'text'}
+          onClick={this.handleChangeLanguage('en')}
+        > english</Button>
+      </Menu.Item>
+    </Menu>
+  )
   selectRoute = (routes = [], pathname) => {
     for (let i = 0; i < routes.length; i++) {
       const route = routes[i];
@@ -131,7 +155,7 @@ class PrimaryLayout extends Component {
     );
   };
 
-  render() {
+  render () {
     const { collapsed } = this.state;
     const {
       routes,
@@ -170,7 +194,9 @@ class PrimaryLayout extends Component {
                   </span>
                 </Dropdown>
                 <span className="site-layout-lang">
-                  <GlobalOutlined />
+                  <Dropdown overlay={this.intlMenu}>
+                    <GlobalOutlined />
+                  </Dropdown>
                 </span>
               </span>
             </span>
