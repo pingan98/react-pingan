@@ -1,0 +1,14 @@
+.search {
+  margin-top: 27px;
+}
+.search .tooltip {
+  padding: 10px 0;
+}
+.search .tooltip .dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: red;
+  margin-right: 5px;
+}
