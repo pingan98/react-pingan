@@ -3,6 +3,8 @@ import { connect } from 'react-redux'
 
 import { getUserInfo, getUserMenu } from './redux'
 
+import Loading from '@comps/Loading'
+
 @connect(null, { getUserInfo, getUserMenu })
 
 class Authorized extends Component {
@@ -25,7 +27,7 @@ class Authorized extends Component {
 
   render () {
     let { loading } = this.state
-    return loading ? <loading></loading> : this.props.render()
+    return loading ? <Loading></Loading> : this.props.render()
   }
 }
 export default Authorized

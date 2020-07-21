@@ -40,8 +40,10 @@
   background-color: #fff;
   padding: 10px 20px;
 }
-.layout-nav div {
+.layout-nav h3 {
   margin-top: 10px;
+  font-size: 37px;
+  font-weight: 521;
 }
 .layout-content {
   padding: 20px;
