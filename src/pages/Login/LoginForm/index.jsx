@@ -72,7 +72,7 @@ function LoginForm (props) {
   // 第二种校验方式
   const validator = (rules, value) => {
     return new Promise((resolve, reject) => {
-      console.log(rules, value)
+      // console.log(rules, value)
       if (!value) {
         return reject('必填项')
       }

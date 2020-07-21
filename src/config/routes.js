@@ -1,6 +1,9 @@
-import Login from "@pages/Login";
-import NotFound from "@pages/404";
-import Oauth from '@pages/Login/components/Oauth'
+
+// 原有方式，会自动加载
+
+// import Login from "@pages/Login";
+// import NotFound from "@pages/404";
+// import Oauth from '@pages/Login/components/Oauth'
 //#region 
 /* export const asyncRoutes = [
 	{
@@ -189,6 +192,14 @@ import Oauth from '@pages/Login/components/Oauth'
 	},
 ]; */
 //#endregion
+
+import { lazy } from 'react'
+// 懒加载方式
+const Login = lazy(() => import("@pages/Login"));
+
+const NotFound = lazy(() => import("@pages/404"));
+
+const Oauth = lazy(() => import("@pages/Login/components/Oauth"));
 
 // 常量路由
 export const constantRoutes = [
