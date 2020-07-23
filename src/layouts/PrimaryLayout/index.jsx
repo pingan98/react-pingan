@@ -16,6 +16,7 @@ import './index.less'
 import logo from '@assets/images/logo.png'
 
 import SiderMenu from '../SiderMenu'
+import AuthorizedRouter from '@comps/Authorized/AuthorizedRouter'
 
 import { connect } from 'react-redux'
 
@@ -107,7 +108,10 @@ class PrimaryLayout extends Component {
                             <h3>{secName}</h3>
                         </div>
 
-                        <div className='layout-content'>Bill is a cat.</div>
+                        <div className='layout-content'>
+                            <AuthorizedRouter></AuthorizedRouter>
+
+                        </div>
                     </Content>
                     <Footer style={{ textAlign: 'center' }}>
                         Ant Design ©2018 Created by Ant UED

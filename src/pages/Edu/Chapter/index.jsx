@@ -28,7 +28,8 @@ dayjs.extend(relativeTime);
     //   state.course.permissionValueList,
     //   "Course"
     // )
-    chapterList: state.chapterList
+    chapterList: state.chapterList,
+    permissionValueList: state.user.permissionValueList
   }),
   { getLessonList }
   // { getcourseList }
@@ -107,6 +108,10 @@ class Chapter extends Component {
   render () {
     const { previewVisible, previewImage, selectedRowKeys } = this.state;
 
+    const { permissionValueList } = this.props
+
+    const index = permissionValueList.indexOf('chapter.addlesson')
+
     const columns = [
       {
         title: "章节名称",
@@ -127,22 +132,24 @@ class Chapter extends Component {
           // if ("free" in data) {
           return (
             <div>
-              <Tooltip title="添加课时" >
-                <Button type='primary' onClick={this.handleAddLesson(data)}>
-                  <PlusOutlined />
-                </Button>
-              </Tooltip>
-              <Tooltip title="更新章节">
+              {index > -1 && data.free === undefined && (
+                < Tooltip title="添加课时" >
+                  <Button type='primary' onClick={this.handleAddLesson(data)}>
+                    <PlusOutlined />
+                  </Button>
+                </Tooltip>
+              )}
+              < Tooltip title={data.free === undefined ? "更新章节" : '更新课时'} >
                 <Button type="primary" style={{ margin: "0 10px" }}>
                   <FormOutlined />
                 </Button>
-              </Tooltip>
-              <Tooltip title="删除章节">
+              </Tooltip >
+              <Tooltip title={data.free === undefined ? "删除章节" : '删除课时'}>
                 <Button type="danger">
                   <DeleteOutlined />
                 </Button>
               </Tooltip>
-            </div>
+            </div >
           );
           // }
         },

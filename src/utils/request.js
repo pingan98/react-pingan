@@ -33,8 +33,10 @@ const CancelToken = axios.CancelToken;
 const cancelTokenMap = new Map();
 const CANCEL_REQUEST_MESSAGE = "cancel request";
 
+// process是node中提供的进程的对象.可以获取当前是开发环境还是生产环境
+const mode = process.env.NODE_ENV
 const axiosInstance = axios.create({
-  baseURL: "", // 基础路径：所有请求的公共路径
+  baseURL: mode === 'production' ? 'http://47.103.203.152' : '', // 基础路径：所有请求的公共路径
   timeout: 10000, // 如果请求超过10s都没有响应结果，就自动中断请求
   headers: {
     // 公共的请求头参数
